@@ -5,18 +5,19 @@ const userSchema = new Schema(
   {
     email: {
       type: String,
-      required: true,
+      required: [true,"échec, pas de courriel"],
       unique: true,
       match: [/.+@.+\..+/, 'Adresse courriel invalide'],
     },
     username: {
       type: String,
-      required: true
+      required: [true,"échec, pas de prénom"],
+      maxlength: [50, 'Le username doit contenir au plus 50 caractères']
     },
     password: {
       type: String,
       required: true,
-      minlength: 6
+      minlength: [6, 'Le mot de passe doit contenir au moins 6 caractères']
     },
     isValet: {
       type: Boolean,
@@ -28,7 +29,7 @@ const userSchema = new Schema(
     },
     voiture: {
       type: Schema.Types.ObjectId,
-      ref: 'Voiture'
+      ref: 'Voiture',
     }
   },
   { timestamps: true }
