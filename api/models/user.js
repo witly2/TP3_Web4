@@ -16,7 +16,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: [true,"échec, pas de mot de passe"],
       minlength: [6, 'Le mot de passe doit contenir au moins 6 caractères']
     },
     isValet: {

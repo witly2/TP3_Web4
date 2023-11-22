@@ -2,7 +2,10 @@ const User = require('../models/user');
 const Voiture = require('../models/voiture');
 const Histo = require('../models/historique');
 const config = require('../config');
+const { use } = require('../routes/user');
 const url_base = config.URL + ":" + config.PORT;
+const bcrypt = require('bcryptjs');
+
 
 
 exports.getUsers = async (req, res, next) => {
@@ -55,12 +58,20 @@ exports.getUserById = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
 
   try {
-    const userId = req.params.id;
+    const userId = req.params.userId;
     console.log(userId);
     const user = await checkUserExists(userId);
 
     user.email=req.body.email;
-    user.voiture=req.body.voiture;
+
+    const hashedPassword = await bcrypt.hash(req.body.password,10);
+
+    if(user.password!=hashedPassword){
+      user.password=hashedPassword;
+    }
+
+
+    
     user.username=req.body.username;
     //user.password=req.body.password;
 
@@ -72,7 +83,31 @@ exports.updateUser = async (req, res, next) => {
 
 }
 
-exports.updateCar = async (req, res, next) => { }
+exports.updateCar = async (req, res, next) => {
+
+  try {
+    const userId = req.params.userId;
+    //console.log(userId);
+    const user = await checkUserExists(userId);
+    console.log(user.Voiture);
+    const car =await Voiture.findById(user.voiture._id)
+    if(!car){
+      const error = new Error('Cette voiture n\'existe pas.');
+      error.statusCode = 404;
+      throw error;
+    }
+    //console.log(car.marque);
+    car.marque=req.body.marque;
+    car.modele=req.body.modele;
+    car.couleur=req.body.couleur;
+    car.plaque=req.body.plaque;
+
+    const result = await car.save()
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+ }
 
 
 

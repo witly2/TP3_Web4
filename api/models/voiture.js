@@ -5,15 +5,19 @@ const voitureSchema = new Schema(
   {
     marque: {
       type: String,
+      required: [true,"échec, pas de marque"],
     },
     modele: {
       type: String,
+      required: [true,"échec, pas de modèle"],
     },
     couleur: {
       type: String,
+      required: [true,"échec, pas de couleur"],
     },
     plaque: {
       type: String,
+      required: [true,"échec, pas de plaque"],
     },
     valet: {
       type: Schema.Types.ObjectId,
@@ -21,9 +25,11 @@ const voitureSchema = new Schema(
     },
     isParked: {
       type: Boolean,
+      default:false
     },
     isMoving: {
       type: Boolean,
+      default:false
     },
     latitude: {
       type: Number,
