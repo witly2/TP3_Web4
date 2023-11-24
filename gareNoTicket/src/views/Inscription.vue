@@ -1,7 +1,72 @@
 <!-- eslint-disable vue/multi-word-component-names -->
-<script setup>
+<script >
 import layoutAuthentification from '../layouts/layoutAuthentification.vue';
 import InputAuth from '../components/InputAuth.vue';
+export default{
+  components:{
+    layoutAuthentification,
+    InputAuth
+  },
+  data(){
+    return {
+      courriel:"",
+      password:"",
+      cPassword:"",
+      nom:""
+    }
+  },
+
+  methods: {
+    // handleInputChangeC(value) {
+    //   this.courriel = value;
+      
+    // },
+    // handleInputChangeM(value) {
+    //   this.password = value;
+    // },
+   
+      signup(){
+        console.log("courrielle "+ this.courriel)
+        console.log("password " +this.password)
+        
+              fetch("http://localhost:3000/auth/signup",{
+
+        method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: this.courriel,
+            password: this.password,
+            username:this.nom,
+            confirmPassword:this.cPassword
+          }),
+      })
+        .then((response) => {
+          if (response.status === 201) {
+            return response.json();
+          } else {
+            throw new Error("Erreur !");
+          }
+        })
+        .then((data) => {
+          console.log('data', data)
+          localStorage.setItem("token", data.token);
+          console.log("token "+ data.token)
+          localStorage.setItem("user", JSON.stringify(data.user));
+          this.$router.push({name: 'login'});
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      },
+    
+    
+  }
+}
+
+
+
 </script>
 
 
@@ -14,12 +79,11 @@ import InputAuth from '../components/InputAuth.vue';
               <div class="col-10 col-sm-8 col-md-6 col-lg-6 offset-1 offset-sm-2 offset-md-3 offset-lg-0 align-self-center d-lg-flex align-items-lg-center align-self-lg-stretch bg-white p-5 rounded rounded-lg-0 my-5 my-lg-0" id="login-block">
                   <div class="m-auto w-lg-75 w-xl-50">
                       <h2 class="text-info fw-light mb-5"><i class="fa fa-diamond"></i>&nbsp;GareNoTicket</h2>
-                      <form v-on:submit.prevent="submitForm">
-                        <InputAuth type="mail" label="Courriel"/>
-                        <InputAuth type="text" label="Nom"/>
-                        <InputAuth type="text" label="Prénom"/>
-                        <InputAuth type="password" label="Mot de passe"/>
-                        <InputAuth type="password" label="Confirmé le mot de passe"/>
+                      <form v-on:submit.prevent="signup">
+                        <InputAuth type="mail" name="fCourriel" label="Courriel" v-model="courriel"/>
+                        <InputAuth type="text" label="Nom" name="fNom" v-model="nom"/>
+                        <InputAuth type="password" label="Mot de passe" name="fPassword" v-model="password"/>
+                        <InputAuth type="password" label="Confirmé le mot  de passe" name="fCPassword" v-model="cPassword"/>
                          <button class="btn btn-info mt-2" type="submit">inscription</button>
                           
                       </form>

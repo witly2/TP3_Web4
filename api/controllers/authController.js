@@ -25,7 +25,12 @@ exports.login = async (req, res, next) => {
             const token = jwt.sign(
               {
                 // Payload
-                email: email
+                email: email,
+                username:user.username,
+                voiture:user.voiture,
+                isValet:user.isValet,
+                price:user.price,
+                userId:user._id.toString()
               },
              config.SECRET_JWT,
               { expiresIn: '1h' }

@@ -2,6 +2,8 @@
 <script >
 import layoutAuthentification from '../layouts/layoutAuthentification.vue';
 import InputAuth from '../components/InputAuth.vue';
+import { jwtDecode } from "jwt-decode";
+//import store from '../Store';
 export default{
   components:{
     layoutAuthentification,
@@ -15,11 +17,65 @@ export default{
   },
 
   methods: {
+    // handleInputChangeC(value) {
+    //   this.courriel = value;
+      
+    // },
+    // handleInputChangeM(value) {
+    //   this.password = value;
+    // },
+   
     login(){
       console.log("courrielle "+ this.courriel)
       console.log("password " +this.password)
-    }
-  },
+
+      fetch("http://localhost:3000/auth/login",{
+
+        method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: this.courriel,
+            password: this.password,
+          }),
+      })
+        .then((response) => {
+          if (response.status === 201) {
+            return response.json();
+          } else {
+            throw new Error("Erreur !");
+          }
+        })
+        .then((data) => {
+          console.log('data', data)
+          localStorage.setItem("token", data.token);
+          console.log("token "+ data.token)
+          // localStorage.setItem("user", JSON.stringify(data.user));
+
+          // Décodage du JWT
+          const decoded = jwtDecode(data.token);
+          //localStorage.setItem("user", JSON.stringify(decoded));
+
+          
+          // Récupération des informations contenues dans le payload
+          // const username = decoded.username;
+          // const email = decoded.email;
+
+          // console.log("Avant la mutation :", store.state.user);
+          // this.$store.commit('setUser', decoded);
+          // console.log("Après la mutation :", store.state.user);
+
+          console.log("userId", decoded.username)
+
+          this.$router.push({name: 'home'});
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      },
+    
+  }
 }
 
 
@@ -39,8 +95,8 @@ export default{
                       <form @submit.prevent="login">
                           
                       
-                          <InputAuth type="mail" name="fCourriel " label="Courriel" v-model.trim="courriel"/>
-                          <InputAuth type="password" name="password" label="Mot de passe" v-model.trim="password"/>
+                          <InputAuth type="mail" name="fCourriel " label="Courriel" v-model="courriel" />
+                          <InputAuth type="password" name="password" label="Mot de passe" v-model="password" />
                          <button class="btn btn-info mt-2" type="submit">Connexion</button>
                       </form>
                       <p class="mt-3 mb-0">Vous êtes nouveau? <a class="text-info small" href="/inscription">S'inscrire</a></p>
@@ -68,6 +124,7 @@ export default{
   box-shadow: 0px 0px 45px 0px rgba(0,0,0,0.4);
   z-index: 2;
 }
+
 
 #bg-block{
   background-image: url('../../public/img/aldain-austria-316143-unsplash.jpg');

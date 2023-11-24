@@ -1,13 +1,13 @@
 <script setup>
 //import {  RouterView } from 'vue-router'
-import Navbar from './components/Navbar.vue'
-import Footer from './components/Footer.vue'
+import Navbar from '../components/Navbar.vue'
+import Footer from '../components/Footer.vue'
 </script>
 
 <template>
   <Navbar/>
 
-    <div>
+    <div class="oiu">
         <slot></slot>
     </div>
 
@@ -15,3 +15,8 @@ import Footer from './components/Footer.vue'
   <Footer/>
 </template>
 
+<style>
+ .oui{
+    min-height: 90vh;
+  }
+</style>

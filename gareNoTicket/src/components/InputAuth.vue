@@ -6,7 +6,7 @@
                 :type="type"
                 class="form-control"
                 @input="handleInput"
-                :value="valuef"
+                :value="modelValue"
                 :name="name"
                 :id="name"
             />
@@ -32,12 +32,12 @@
         required: true,
       },
      
-      valuef:String
+      modelValue:String
     },
     methods: {
         handleInput(event){
-            this.$emit("update:valuef",event.target.value)
-            console.log("event "+ event.target.value)
+            this.$emit("update:modelValue",event.target.value)
+            //console.log("event "+ event.target.value)
         }
     },
   };
