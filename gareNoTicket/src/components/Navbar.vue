@@ -8,11 +8,11 @@
         <div id="navcol-1" class="collapse navbar-collapse" style="color: rgb(255,255,255);">
             <ul class="navbar-nav nav-right">
                 <li class="nav-item"><a class="nav-link active" href="/" style="color: rgba(224,217,217,0.9);">Ma Place </a></li>
-                <li class="nav-item"><a class="nav-link active" href="/profile" style="color: rgba(224,217,217,0.9);">Profil </a></li>
+                <li class="nav-item"><a class="nav-link active" href="/profil" style="color: rgba(224,217,217,0.9);">Profil </a></li>
                 <!-- <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgba(224,217,217,0.9);">Services </a>
                     <div class="dropdown-menu"><a class="dropdown-item" href="services.html">Price Packages</a><a class="dropdown-item" href="#">Order Services</a><a class="dropdown-item" href="#">Custom Request</a></div>
                 </li> -->
-                <li class="nav-item"><a class="nav-link" href="about.html" style="color: rgba(224,217,217,0.9);">Transaction </a></li>
+                <li class="nav-item"><a class="nav-link" href="/transaction" style="color: rgba(224,217,217,0.9);">Transaction </a></li>
                 <!-- <li class="nav-item"><a class="nav-link" href="faq.html" style="color: rgba(224,217,217,0.9);">faq </a></li>
                 <li class="nav-item"><a class="nav-link" href="contact.html" style="color: rgba(224,217,217,0.9);">contact </a></li> -->
             </ul>

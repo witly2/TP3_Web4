@@ -82,9 +82,9 @@ export default {
 <template >
 <layoutGen>
     <div class="profile my-auto">
-        <div class="  mx-auto info my-5  p-3 ">
-            <h5>Profil</h5>
-            <div class=" pof  mx-3 flex-wrap">
+        <div class="  mx-auto info my-5  p-5 ">
+            <h5 class="text-center">Profil</h5>
+            <div class=" pof shadow card mx-auto flex-wrap">
                 <div class="   col-sm-12 w-lg-75 w-xl-50 p-3">
                     <p><strong>Informations personnelles</strong></p>
                     <form>
@@ -135,7 +135,7 @@ export default {
 }
 
 .pof{
-    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.3);
+    /* box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.3); */
     width: 50%;
 }
 

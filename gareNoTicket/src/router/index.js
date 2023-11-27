@@ -36,10 +36,19 @@ const router = createRouter({
       }
     },
     {
-      path: '/profile',
+      path: '/profil',
       name: 'profile',
   
       component: () => import('../views/Profile.vue'),
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/transaction',
+      name: 'transaction',
+  
+      component: () => import('../views/Facturation.vue'),
       meta: {
         requiresAuth: true
       }

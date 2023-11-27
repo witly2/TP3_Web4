@@ -1,6 +1,14 @@
 <template >
   <layoutGen>
-    <div id="mapContainer"></div>
+    <div id="mapContainer"> </div>
+        
+
+    <div class="container-fluid">
+      <div class="map-buttons d-flex justify-content-between mx-auto shadow">
+          <button class="btn btn-primary me-3 ">Je laisse ma voiture</button>
+          <button class="btn btn-secondary disabled">J'ai recupéré ma voiture</button>
+    </div>
+    </div>
   </layoutGen>
 </template>
 
@@ -83,6 +91,31 @@ export default {
 #mapContainer {
   width: 100%;
   height: 90vh;
+  position: relative;
+  z-index: 50;
 }
+
+
   
+.map-buttons {
+  position: absolute;
+  bottom: 100px;
+  z-index: 100;
+  /* left: 50%;
+  transform: translateX(-50%); */
+
+  background-color: white; 
+  padding: 10px;
+  border-radius: 5px; 
+  /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);  */
+}
+
+@media (min-width: 750px) {
+  .map-buttons{
+     left: 50%;
+      transform: translateX(-50%);
+  }
+}
+
+
 </style>
