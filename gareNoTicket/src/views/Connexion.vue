@@ -3,6 +3,8 @@
 import layoutAuthentification from '../layouts/layoutAuthentification.vue';
 import InputAuth from '../components/InputAuth.vue';
 import { jwtDecode } from "jwt-decode";
+import {toast} from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css';
 //import store from '../Store';
 export default{
   components:{
@@ -41,7 +43,7 @@ export default{
           }),
       })
         .then((response) => {
-          if (response.status === 201) {
+          if (response.status === 200) {
             return response.json();
           } else {
             throw new Error("Erreur !");
@@ -50,25 +52,28 @@ export default{
         .then((data) => {
           console.log('data', data)
           localStorage.setItem("token", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
           console.log("token "+ data.token)
           // localStorage.setItem("user", JSON.stringify(data.user));
 
           // Décodage du JWT
           const decoded = jwtDecode(data.token);
-          //localStorage.setItem("user", JSON.stringify(decoded));
-
-          
-          // Récupération des informations contenues dans le payload
-          // const username = decoded.username;
-          // const email = decoded.email;
-
-          // console.log("Avant la mutation :", store.state.user);
-          // this.$store.commit('setUser', decoded);
-          // console.log("Après la mutation :", store.state.user);
+        
 
           console.log("userId", decoded.username)
+          
+          // this.$toasted.show('Connexion réussie', {
+          //   theme: 'toasted-primary', // vous pouvez personnaliser le thème
+          //   position: 'top-center',   // position du toast
+          //   duration: 3000             // durée d'affichage en millisecondes
+          // })
+
+          toast.success('Message de réussite!',{
+            autoClose:3000
+          });
 
           this.$router.push({name: 'home'});
+         
         })
         .catch((error) => {
           console.log(error);
@@ -114,6 +119,8 @@ export default{
 
 
 <style scoped>
+
+/* @import 'vue3-toastify/dist/index.css'; */
 .mh-100vh {
   min-height: 100vh;
 }

@@ -13,9 +13,14 @@ exports.login = async (req, res, next) => {
 
   try {
 
-      const user = await User.findOne({email: email});
+    let loadedUser;
+
+      const user = await User.findOne({email: email}).populate('voiture');
     
       if(user){
+
+        loadedUser = user;
+        
         await bcrypt.compare(password, user.password)
         .then(response => {
           if (response) {
@@ -35,10 +40,18 @@ exports.login = async (req, res, next) => {
              config.SECRET_JWT,
               { expiresIn: '1h' }
             );
+            loadedUser.password=""
+            loadedUser.userId=user._id.toString()
+            
 
-            res.status(201).json({token:token});
+            res.status(200).json({token:token,user: loadedUser});
            
           }
+
+          const error = new Error('Mauvais mot de passe !');
+          error.statusCode = 401;
+          throw error;
+          
 
         })
         .catch(err => {
@@ -46,8 +59,8 @@ exports.login = async (req, res, next) => {
         });
       }
       
-      const error = new Error(' Utilisateur Ou mot de passe incorrect');
-      error.statusCode = 401;
+      const error = new Error(' Utilisateur non trouvée');
+      error.statusCode = 404;
       throw error;
 
   } catch (err) {

@@ -9,12 +9,30 @@
 import layoutGen from '../layouts/layoutGenerale.vue';
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { jwtDecode } from "jwt-decode";
 
 export default {
   components:{
     layoutGen,
    
   },
+  computed: {
+        user() {
+            // console.log("user: ",localStorage.getItem("user"))
+            // //store.getters('user')
+            // return this.$store.state.user || {};
+
+            const token = localStorage.getItem("token");
+
+            if (token) {
+               const storedUser=jwtDecode(token);
+                return storedUser
+            } else {
+                return null; // ou une valeur par défaut appropriée
+            }
+        },
+
+    },
   data() {
     return {
       map: null,

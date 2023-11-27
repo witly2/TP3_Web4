@@ -88,6 +88,7 @@ router.beforeEach((to, from, next) => {
   } catch (error) {
     console.error('Erreur lors du décodage du jeton :', error);
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     next({ path: '/login' });
   }
 });

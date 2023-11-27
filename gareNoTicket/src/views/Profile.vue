@@ -1,76 +1,9 @@
 <!-- eslint-disable vue/multi-word-component-names -->
-<template >
-<layoutGen>
-    <div class="page" style="min-height: 100%;">
-    <section class="clean-block about-us">
-     
-        <div class="row" style="margin-right: 0px;margin-left: 0px;">
-            <div class="col  text-center">
-                <h2 class="text-info ">Nombre Completo</h2>
-            </div>
-        </div>
-        <div class="row justify-content-center" style="margin-right: 0px;margin-left: 0px;">
-            <div class="col-sm-6 col-lg-4" style="padding-right: 0px;padding-left: 0px;">
-                <div class="card clean-card"><img class="card-img-top w-100 d-block" src="https://avatar.iran.liara.run/public/[ID]" />
-                    <div class="card-body info">
-                        <div class="row" style="margin-top: -24px;">
-                            <div class="col-md-12" style="margin-top: 22px;">
-                                <div class="row">
-                                    <div class="col">
-                                        <p class="labels"><strong>{{user.username}}</strong></p>
-                                    </div>
-                                    <div class="col">
-                                        <p class="labels">usuarioPrueba</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <p class="labels"><strong>Teléfono</strong></p>
-                                    </div>
-                                    <div class="col">
-                                        <p class="labels">6622971893</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <p class="labels"><strong>País</strong></p>
-                                    </div>
-                                    <div class="col">
-                                        <p class="labels">México</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <p class="labels"><strong>Estado</strong></p>
-                                    </div>
-                                    <div class="col">
-                                        <p class="labels">Sonora</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <p class="labels"><strong>Ciudad</strong></p>
-                                    </div>
-                                    <div class="col">
-                                        <p class="labels">Hermosillo</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><a class="btn btn-success" role="button" href="editProfile.html"><i class="fas fa-pencil-alt"></i> Editar</a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-  </div>
-</layoutGen>
-</template>
 <script>
+
 import layoutGen from '../layouts/layoutGenerale.vue';
 import { jwtDecode } from "jwt-decode";
+import InputAuth from '../components/InputAuth.vue';
 //import {mapState} from 'vuex'
 //import store from '../Store';
 
@@ -80,15 +13,19 @@ export default {
     
     components:{
         layoutGen,
+        InputAuth,
     
     },
-
-
-
-    created() {
-        console.log('Component created. User:', this.$store.state.user);
-    },
-
+    // data() {
+    //     return {
+    //         user:{}
+                
+    //     };
+    // },
+    // created () {
+    //     this.getUser()
+    //     console.log("user", this.user.username)
+    // },
     // Mon userSession
     computed: {
         user() {
@@ -100,52 +37,124 @@ export default {
 
             if (token) {
                const storedUser=jwtDecode(token);
+            //    this.infos = [
+            //         { id: 'Pseudo', valeur: storedUser?.username },
+            //         { id: 'Email', valeur: storedUser?.email },
+            //     ];
                 return storedUser
             } else {
                 return null; // ou une valeur par défaut appropriée
             }
         },
+        
 
     },
+    
+    // methods:{
+    //     getUser(){
+            
+    //         fetch("http://localhost:3000/user/", {
+    //         method: "GET",
+    //         headers: {
+    //         "Content-Type": "application/json",
+    //         "Authorization": "Bearer " + localStorage.getItem('token'),
+    //     },
+    //   })
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     this.user = data
+    //     console.log("data",data)
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
+    //     }
+    // }
 
    
 
 }
+
+
 </script>
-<style scoped>
-  
 
 
-.clean-block {
-  padding-bottom: 50px;
+<template >
+<layoutGen>
+    <div class="profile my-auto">
+        <div class="  mx-auto info my-5  p-3 ">
+            <h5>Profil</h5>
+            <div class=" pof  mx-3 flex-wrap">
+                <div class="   col-sm-12 w-lg-75 w-xl-50 p-3">
+                    <p><strong>Informations personnelles</strong></p>
+                    <form>
+                        <!-- <div v-for="(info, index) in infos" :key="index">
+                        </div> -->
+
+                        <InputAuth type="mail" name="fCourriel " label="Courriel" v-model="user.email" />
+                        <InputAuth type="text" name="username" label="pseudo" v-model="user.username" />
+
+                         <div v-if="!user.isValet"   >
+                            <p><strong>Voiture</strong></p>
+                            <InputAuth type="text" name="matricule" label="Imatriculation" v-model="user.voiture.plaque" />
+                            <InputAuth type="text" name="fMarque " label="Marque" v-model="user.voiture.marque" />
+                            <InputAuth type="text" name="modele" label="Modèle" v-model="user.voiture.modele" />
+                            <InputAuth type="text" name="couleur" label="Couleur" v-model="user.voiture.couleur" />
+                        </div>
+
+                        <div v-else >
+                            <InputAuth type="number" name="fNumber " label="Tarif" v-model="user.price" />
+                        </div>
+                        <button class="btn btn-info mt-2" type="submit">Soumettre</button>
+
+                    </form>
+                </div>
+
+               
+           
+            </div>
+            
+        </div>
+
+    </div>
+</layoutGen>
+</template>
+
+<style>
+.profile{
+    min-height: 90vh;
+    
 }
 
-@media (min-width:576px) {
-  .clean-block {
-    padding-bottom: 100px;
+.info{
+    
+    /* background-color: #3498db; */
+    /* min-height: 400px; */
+    width: 50%;
+    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.3);
+}
+
+.pof{
+    box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.3);
+    width: 50%;
+}
+
+@media (max-width: 500px) {
+  .pof {
+    width: 100%;
+  }
+  .info{
+    width: 90%;
   }
 }
 
-.card {
-    font-weight: 400;
-    position: relative;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 0.25rem;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+@media (min-width: 500px) and (max-width: 1000px) {
+  .pof {
+    width: 75%;
+  }
+  .info{
+    width: 75%;
+  }
 }
 
-.card-body {
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  min-height: 1px;
-  padding: 1.25rem;
-}
 </style>
