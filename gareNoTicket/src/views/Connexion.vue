@@ -72,7 +72,14 @@ export default{
             autoClose:3000
           });
 
-          this.$router.push({name: 'home'});
+          if(decoded.isValet===true){
+            this.$router.push({name: 'valet'});
+          }
+          else{
+            this.$router.push({name: 'home'});
+          }
+
+          
          
         })
         .catch((error) => {

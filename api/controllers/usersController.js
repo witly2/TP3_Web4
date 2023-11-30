@@ -35,7 +35,7 @@ exports.getUser = async (req, res, next) => {
     //console.log("user", req.user.username)
     const userId = req.user.userId;
 
-    //const user = await checkUserExists(userId);
+    const user = await checkUserExists(userId);
     res.status(200).json({
       user: user
     });

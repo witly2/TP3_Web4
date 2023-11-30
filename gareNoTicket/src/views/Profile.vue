@@ -2,7 +2,7 @@
 <script>
 
 import layoutGen from '../layouts/layoutGenerale.vue';
-import { jwtDecode } from "jwt-decode";
+//import { jwtDecode } from "jwt-decode";
 import InputAuth from '../components/InputAuth.vue';
 //import {mapState} from 'vuex'
 //import store from '../Store';
@@ -16,60 +16,65 @@ export default {
         InputAuth,
     
     },
-    // data() {
-    //     return {
-    //         user:{}
+    
+    data() {
+        return {
+            user:null
                 
-    //     };
-    // },
-    // created () {
-    //     this.getUser()
-    //     console.log("user", this.user.username)
-    // },
+        };
+    },
+    methods:{
+       async getUser(){
+            
+            await fetch("http://localhost:3000/user/", {
+            method: "GET",
+            headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem('token'),
+            },
+            })
+            .then(response => response.json())
+            .then(data => {
+                this.user = data.user
+                console.log("data", this.user)
+
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+    },
+   async created() {
+   
+           await this.getUser();
+            console.log("user", this.user.username);
+        
+    },
     // Mon userSession
     computed: {
-        user() {
-            // console.log("user: ",localStorage.getItem("user"))
-            // //store.getters('user')
-            // return this.$store.state.user || {};
+        // user() {
+        //     // console.log("user: ",localStorage.getItem("user"))
+        //     // //store.getters('user')
+        //     // return this.$store.state.user || {};
 
-            const token = localStorage.getItem("token");
+        //     const token = localStorage.getItem("token");
 
-            if (token) {
-               const storedUser=jwtDecode(token);
-            //    this.infos = [
-            //         { id: 'Pseudo', valeur: storedUser?.username },
-            //         { id: 'Email', valeur: storedUser?.email },
-            //     ];
-                return storedUser
-            } else {
-                return null; // ou une valeur par défaut appropriée
-            }
-        },
+        //     if (token) {
+        //        const storedUser=jwtDecode(token);
+        //     //    this.infos = [
+        //     //         { id: 'Pseudo', valeur: storedUser?.username },
+        //     //         { id: 'Email', valeur: storedUser?.email },
+        //     //     ];
+        //         return storedUser
+        //     } else {
+        //         return null; // ou une valeur par défaut appropriée
+        //     }
+        // },
         
 
     },
     
-    // methods:{
-    //     getUser(){
-            
-    //         fetch("http://localhost:3000/user/", {
-    //         method: "GET",
-    //         headers: {
-    //         "Content-Type": "application/json",
-    //         "Authorization": "Bearer " + localStorage.getItem('token'),
-    //     },
-    //   })
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     this.user = data
-    //     console.log("data",data)
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
-    //     }
-    // }
+  
 
    
 
@@ -86,10 +91,9 @@ export default {
             <h5 class="text-center">Profil</h5>
             <div class=" pof shadow card mx-auto flex-wrap">
                 <div class="   col-sm-12 w-lg-75 w-xl-50 p-3">
-                    <p><strong>Informations personnelles</strong></p>
+                    <p><strong>Informations personnelles </strong></p>
                     <form>
-                        <!-- <div v-for="(info, index) in infos" :key="index">
-                        </div> -->
+                   
 
                         <InputAuth type="mail" name="fCourriel " label="Courriel" v-model="user.email" />
                         <InputAuth type="text" name="username" label="pseudo" v-model="user.username" />

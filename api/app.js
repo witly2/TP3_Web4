@@ -57,3 +57,4 @@ mongoose
   })
   .catch(err => console.log(err));
 
+  module.exports = app; //Permet d'exporter l'application pour être utilisée par Vercel

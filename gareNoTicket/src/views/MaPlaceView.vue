@@ -5,7 +5,7 @@
 
     <div class="container-fluid">
       <div class="map-buttons d-flex justify-content-between mx-auto shadow">
-          <button class="btn btn-primary me-3 ">Je laisse ma voiture</button>
+          <button class="btn btn-primary me-3 " @click="findUserLocation">Je laisse ma voiture</button>
           <button class="btn btn-secondary disabled">J'ai recupéré ma voiture</button>
     </div>
     </div>

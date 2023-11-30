@@ -7,7 +7,7 @@
         <div><a class="navbar-brand" href="/"><span>GareNoTicket </span></a></div>
         <div id="navcol-1" class="collapse navbar-collapse" style="color: rgb(255,255,255);">
             <ul class="navbar-nav nav-right">
-                <li class="nav-item"><a class="nav-link active" href="/" style="color: rgba(224,217,217,0.9);">Ma Place </a></li>
+                <li v-if="!this.user.isValet" class="nav-item"><a class="nav-link active" href="/" style="color: rgba(224,217,217,0.9);">Ma Place </a></li>
                 <li class="nav-item"><a class="nav-link active" href="/profil" style="color: rgba(224,217,217,0.9);">Profil </a></li>
                 <!-- <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#" style="color: rgba(224,217,217,0.9);">Services </a>
                     <div class="dropdown-menu"><a class="dropdown-item" href="services.html">Price Packages</a><a class="dropdown-item" href="#">Order Services</a><a class="dropdown-item" href="#">Custom Request</a></div>
@@ -16,9 +16,11 @@
                 <!-- <li class="nav-item"><a class="nav-link" href="faq.html" style="color: rgba(224,217,217,0.9);">faq </a></li>
                 <li class="nav-item"><a class="nav-link" href="contact.html" style="color: rgba(224,217,217,0.9);">contact </a></li> -->
             </ul>
-            <p class="ms-auto navbar-text actions">
-                <!-- <a class="login" href="login.html" style="color: rgba(224,217,217,0.9);">Profil</a> -->
-                <a class="btn btn-light action-button" role="button" href="#" @click="logout" style="color: rgba(0,0,0,0.9);background: var(--bs-gray-200);border-radius: 10px;border-style: solid;border-color: rgba(0,0,0,0.9);font-size: 16px;padding: 5px 8px;">Déconnexion</a></p>
+            <div class="ms-auto navbar-text actions">
+                <a v-if="this.user.isValet" class="login" href="login.html" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="color: rgba(224,217,217,0.9);">Profil</a>
+                <a class="btn btn-light action-button" role="button" href="#" @click="logout" style="color: rgba(0,0,0,0.9);background: var(--bs-gray-200);border-radius: 10px;border-style: solid;border-color: rgba(0,0,0,0.9);font-size: 16px;padding: 5px 8px;">Déconnexion</a>
+            </div>
+            
         </div>
     </div>
 </nav>
@@ -27,6 +29,18 @@
 <script>
 export default {
 
+  computed: {
+  user() {
+      const userData = localStorage.getItem('user');
+
+    
+      const userObject = JSON.parse(userData);
+    return userObject;
+  },
+},
+created(){
+  console.log("user",this.user)
+},
   methods:{
     logout(){
       // Supprimer le token d'authentification du localStorage

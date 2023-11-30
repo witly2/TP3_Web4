@@ -36,6 +36,15 @@ const router = createRouter({
       }
     },
     {
+      path: '/valet',
+      name: 'valet',
+  
+      component: () => import('../views/ValetView.vue'),
+      meta: {
+        requiresAuth: true
+      } 
+    },
+    {
       path: '/profil',
       name: 'profile',
   
