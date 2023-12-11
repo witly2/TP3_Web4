@@ -5,9 +5,9 @@
 
     <div class="container-fluid">
       <div class="map-buttons d-flex justify-content-between mx-auto shadow">
-          <button class="btn btn-primary me-3 " @click="findUserLocation">Je laisse ma voiture</button>
-          <button class="btn btn-secondary disabled">J'ai recupéré ma voiture</button>
-    </div>
+        <button class="btn btn-primary me-3 " @click="findUserLocation">Je laisse ma voiture</button>
+        <button class="btn btn-secondary disabled">J'ai recupéré ma voiture</button>
+      </div>
     </div>
   </layoutGen>
 </template>
@@ -59,6 +59,11 @@ export default {
         attribution:
           '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(this.map);
+      //  // Créez un marqueur et ajoutez-le à la carte
+      //   const marker = L.marker([this.latitude, this.longitude]).addTo(this.map);
+
+      //   // Ajoutez une popup au marqueur
+      //   marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
     },
     findUserLocation() {
       if (navigator.geolocation) {
@@ -67,11 +72,22 @@ export default {
             console.log('position', position)
 
             const { latitude, longitude } = position.coords;
-            this.latitude = latitude;
-            this.longitude = longitude;
+
+            if(this.user.voiture.latitude && this.user.voiture.longitude){
+              this.latitude = this.user.voiture.latitude;
+              this.longitude = this.user.voiture.longitude;
+              console.log("oui")
+            }
+            else{
+              this.latitude = latitude;
+              this.longitude = longitude;
+
+            }
+           
 
             this.map.setView([latitude, longitude], 13);
-            L.marker([latitude, longitude], { draggable: true }).addTo(this.map);
+            var marker= L.marker([latitude, longitude], { draggable: true }).addTo(this.map);
+            marker.bindPopup(`<b>${this.user.username}</b><br>${this.user.voiture.marque} <br>${this.user.voiture.plaque} <br>${this.user.voiture.couleur} `).openPopup();
           },
           (error) => {
             console.error("erreur:", error);

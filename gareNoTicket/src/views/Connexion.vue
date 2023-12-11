@@ -5,6 +5,8 @@ import InputAuth from '../components/InputAuth.vue';
 import { jwtDecode } from "jwt-decode";
 import {toast} from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css';
+import { useUserStore } from '../stores/user'
+
 //import store from '../Store';
 export default{
   components:{
@@ -14,9 +16,11 @@ export default{
   data(){
     return {
       courriel:"",
-      password:""
+      password:"",
+      //userStore:null,
     }
   },
+  
 
   methods: {
     // handleInputChangeC(value) {
@@ -50,10 +54,10 @@ export default{
           }
         })
         .then((data) => {
-          console.log('data', data)
+          //console.log('data', data)
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
-          console.log("token "+ data.token)
+          //console.log("token "+ data.token)
           // localStorage.setItem("user", JSON.stringify(data.user));
 
           // Décodage du JWT
@@ -71,13 +75,16 @@ export default{
           toast.success('Message de réussite!',{
             autoClose:3000
           });
+          const userStore = useUserStore();
+          userStore.setUser(decoded)
+          console.log("userStore",userStore.getUser().username)
 
-          if(decoded.isValet===true){
-            this.$router.push({name: 'valet'});
-          }
-          else{
+          // if(decoded.isValet===true){
+          //   this.$router.push({name: 'valet'});
+          // }
+          // else{
             this.$router.push({name: 'home'});
-          }
+          //}
 
           
          
@@ -87,7 +94,8 @@ export default{
         });
       },
     
-  }
+  }, 
+
 }
 
 

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const usersController = require('../controllers/usersController');
 const isAuth = require('../middleware/is-auth');
+const voiture = require('../models/voiture');
+
 
 // /user/ => GET
 router.get('/users/', usersController.getUsers);
@@ -11,6 +13,7 @@ router.get('/user/', isAuth, usersController.getUser);
 
 // un utilisateur avec son id /user/:id
 router.get('/user/:id', usersController.getUserById);
+
 
 // Mise à jour d'un utilisateur
 router.put('/user/:userId', usersController.updateUser);

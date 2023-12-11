@@ -30,8 +30,8 @@ module.exports = [{
   "valet":"650dbef77bc86e471e5c0af6",
   "isParked":true,
   "isMoving": false,
-  "latitude": 458.5017,
-  "longitude": 78.5673,
+  "latitude": 46.803,
+  "longitude": -71.2412,
   "timeToLeave": "2023-11-30T16:30:00Z"
 },
 {
@@ -43,8 +43,8 @@ module.exports = [{
   "valet":"650dbef77bc86e471e5c0af6",
   "isParked":true,
   "isMoving": false,
-  "latitude": 458.5017,
-  "longitude": 88.5673,
+  "latitude": 51.5,
+  "longitude": -0.09,
   "timeToLeave": "2023-11-30T11:45:00Z"
 },
 {

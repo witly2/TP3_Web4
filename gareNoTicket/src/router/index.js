@@ -45,6 +45,15 @@ const router = createRouter({
       } 
     },
     {
+      path: '/movecar/:id',
+      name: 'movecar',
+  
+      component: () => import('../views/MovecarView.vue'),
+      meta: {
+        requiresAuth: true
+      } 
+    },
+    {
       path: '/profil',
       name: 'profile',
   
@@ -84,13 +93,31 @@ router.beforeEach((to, from, next) => {
          const currentTime = new Date().getTime();
 
         if(token && currentTime<expirationTime){
+          if (to.name === 'home' && userIsAllowedForHome(decoded)) {
+
+            next({ name: 'valet' });
+          }
+          else if(to.name === 'valet' && !userIsAllowedForHome(decoded)){
+            next({ name: 'home' });
+          }
+          else if(to.name === 'movecar' && !userIsAllowedForHome(decoded)){
+            next({ name: 'home' });
+          }
+          else if(to.name === 'transaction' && userIsAllowedForHome(decoded)){
+            next({ name: 'valet' });
+          }
+          else{
             next();
+          }
         }
         else{
           localStorage.removeItem('token');
           console.log("Date: ", expirationTime)
           next({ name: 'login' });
         }
+       // console.log("/////",userIsAllowedForHome(decoded))
+
+       
         
       } else {
         next({ name: 'login' });
@@ -103,6 +130,8 @@ router.beforeEach((to, from, next) => {
         next({ path: '/' });
       }
     }
+
+   
   } catch (error) {
     console.error('Erreur lors du décodage du jeton :', error);
     localStorage.removeItem('token');
@@ -115,5 +144,12 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
   console.log('router.afterEach', to, from);
 });
+
+function userIsAllowedForHome(decoded) {
+
+  return decoded.isValet;
+}
+  
+
 
 export default router
