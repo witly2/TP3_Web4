@@ -21,7 +21,7 @@ exports.seed = async (req, res, next) => {
       Voitures.deleteMany(),
     ]);
 
-    const [usersInsert, voitureInsert, facturesInsert, historiquesInsert] = await Promise.all([
+    const [usersInsert,  facturesInsert, historiquesInsert,voitureInsert] = await Promise.all([
       User.insertMany(users),
       Factures.insertMany(factures),
       Historiques.insertMany(historiques),

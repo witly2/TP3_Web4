@@ -19,7 +19,11 @@ export default {
     
     data() {
         return {
-            user:null
+            user:null,
+            matricule: '',
+            marque: '',
+            modele: '',
+            couleur: '',
                 
         };
     },
@@ -42,7 +46,23 @@ export default {
             .catch(error => {
                 console.log(error);
             });
-        }
+        },
+        createVoitureForm() {
+  const formContainer = document.getElementById('voiture');
+
+  const form = this.$createElement('div', [
+    this.$createElement('p', { style: 'font-weight: bold;' }, 'Ajouter une voiture'),
+    this.$createElement('InputAuth', { props: { type: 'text', name: 'matricule', label: 'Immatriculation', value: this.matricule } }),
+    this.$createElement('InputAuth', { props: { type: 'text', name: 'fMarque', label: 'Marque', value: this.marque } }),
+    this.$createElement('InputAuth', { props: { type: 'text', name: 'modele', label: 'Modèle', value: this.modele } }),
+    this.$createElement('InputAuth', { props: { type: 'text', name: 'couleur', label: 'Couleur', value: this.couleur } })
+  ]);
+
+  
+
+  // Ajouter le formulaire au DOM
+  formContainer.appendChild(form.$el);
+}
     },
    async created() {
    
@@ -91,25 +111,38 @@ export default {
             <h5 class="text-center">Profil</h5>
             <div class=" pof shadow card mx-auto flex-wrap">
                 <div class="   col-sm-12 w-lg-75 w-xl-50 p-3">
-                    <p><strong>Informations personnelles </strong></p>
+                    <p v-if="user.voiture!=null"><strong>Informations personnelles </strong></p>
                     <form>
                    
 
-                        <InputAuth type="mail" name="fCourriel " label="Courriel" v-model="user.email" />
-                        <InputAuth type="text" name="username" label="pseudo" v-model="user.username" />
+                        <InputAuth type="mail" name="fCourriel " label="Courriel" v-model="user.email"  v-if="user.isValet || user.voiture!=null"/>
+                        <InputAuth type="text" name="username" label="pseudo" v-model="user.username" v-if="user.isValet || user.voiture!=null"/>
 
-                         <div v-if="!user.isValet"   >
+                         <div v-if="!user.isValet && user.voiture!=null"   >
                             <p><strong>Voiture</strong></p>
                             <InputAuth type="text" name="matricule" label="Imatriculation" v-model="user.voiture.plaque" />
                             <InputAuth type="text" name="fMarque " label="Marque" v-model="user.voiture.marque" />
                             <InputAuth type="text" name="modele" label="Modèle" v-model="user.voiture.modele" />
                             <InputAuth type="text" name="couleur" label="Couleur" v-model="user.voiture.couleur" />
                         </div>
+                        
+                        <div v-if="user.voiture == null && !user.isValet" id="voiture">
+                            <p><strong>Ajouter une voiture</strong></p>
+                            <InputAuth type="text" name="matricule" label="Immatriculation" v-model="matricule" />
+                            <InputAuth type="text" name="fMarque" label="Marque" v-model="marque" />
+                            <InputAuth type="text" name="modele" label="Modèle" v-model="modele" />
+                            <InputAuth type="text" name="couleur" label="Couleur" v-model="couleur" />
 
-                        <div v-else >
+                            <!-- <button class="btn btn-info mt-2" type="submit" @click="createVoitureForm">Ajouter une voiture</button> -->
+                        </div>
+
+                        <div v-if="user.isValet" >
                             <InputAuth type="number" name="fNumber " label="Tarif" v-model="user.price" />
                         </div>
-                        <button class="btn btn-info mt-2" type="submit">Soumettre</button>
+
+                        <button class="btn btn-info mt-2" type="submit" v-if="user.voiture!=null || user.isValet">Soumettre</button>
+                        <button class="btn btn-info mt-2" type="submit" v-else>Ajouter</button>
+
 
                     </form>
                 </div>

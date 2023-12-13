@@ -3,12 +3,17 @@
     <div id="mapContainer"> </div>
         
 
-    <div class="container-fluid">
-      <div class="map-buttons d-flex justify-content-between mx-auto shadow">
-        <button class="btn btn-primary me-3 " @click="findUserLocation">Je laisse ma voiture</button>
-        <button class="btn btn-secondary disabled">J'ai recupéré ma voiture</button>
+    <div class="container-fluid row justify-center">
+        <div class="map-buttons d-flex justify-content-between mx-auto shadow align-center  col-sm-12 col-md-3">
+          <button class="btn bg-black fw-bold me-3 small " @click="parkCar" id="parkcarbtn" >Je laisse ma voiture</button>
+          <button class="btn bg-black small fw-bold disabled" id="validationBtn" @click="confirmPosition">J'ai recupéré ma voiture</button>
+          <span @click="getPosition" class="localisation ms-2 border border-1 border-black p-1"><img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png" alt=""  style="width: 15px;"></span>
+          
+        </div>
+        <div class="map-confirm bg-white text-center d-none col-md-6  col-sm-12 align-items-center shadow" id="map-confirm">
+          <p class="fw-bold small">Vérifier la position de la voiture ou déplacer le marqueur rouge pour corriger puis valider le stationement </p>
+        </div>
       </div>
-    </div>
   </layoutGen>
 </template>
 
@@ -73,14 +78,21 @@ export default {
 
             const { latitude, longitude } = position.coords;
 
-            if(this.user.voiture.latitude && this.user.voiture.longitude){
-              this.latitude = this.user.voiture.latitude;
-              this.longitude = this.user.voiture.longitude;
-              console.log("oui")
-            }
-            else{
-              this.latitude = latitude;
-              this.longitude = longitude;
+           if(this.user.voiture!=null){
+              if(this.user.voiture.latitude && this.user.voiture.longitude){
+                this.latitude = this.user.voiture.latitude;
+                this.longitude = this.user.voiture.longitude;
+                console.log("oui")
+              }
+              else{
+                this.latitude = latitude;
+                this.longitude = longitude;
+
+              }
+           }
+           else{
+                this.latitude = latitude;
+                this.longitude = longitude;
 
             }
            
@@ -103,7 +115,7 @@ export default {
   }
 }
 </script>
-<style >
+<style lang="scss">
 #mapContainer {
   width: 100%;
   height: 90vh;
@@ -117,14 +129,23 @@ export default {
   position: absolute;
   bottom: 100px;
   z-index: 100;
-  /* left: 50%;
-  transform: translateX(-50%); */
 
-  background-color: white; 
   padding: 10px;
   border-radius: 5px; 
   /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);  */
 }
+
+.map-confirm {
+    position: absolute;
+    bottom: 40px;
+    z-index: 100;
+  
+    padding: 10px;
+    border-radius: 5px; 
+    max-height: 60vh; /* Ajustez cette valeur en fonction de vos besoins */
+    overflow-y: auto;
+  
+  }
 
 @media (min-width: 750px) {
   .map-buttons{
@@ -132,6 +153,8 @@ export default {
       transform: translateX(-50%);
   }
 }
+
+
 
 
 </style>

@@ -1,3 +1,5 @@
+const now = new Date()
+
 module.exports = [{
   "_id": "650e08dc63d222e2c0afc396",
   "marque": "Chevrolet",
@@ -7,6 +9,7 @@ module.exports = [{
   "valet":"650dbef77bc86e471e5c0af6",
   "isParked":false,
   "isMoving": true,
+  
 }, 
 {
   "_id": "650e404b63d222e2c0afc397",
@@ -19,7 +22,7 @@ module.exports = [{
   "isMoving": false,
   "latitude": 45.5017,
   "longitude": -73.5673,
-  "timeToLeave": "2023-11-30T09:00:00Z"
+  "timeToLeave": now
 }, 
 {
   "_id": "650e404b63d222e2c0afc398",
@@ -32,7 +35,7 @@ module.exports = [{
   "isMoving": false,
   "latitude": 46.803,
   "longitude": -71.2412,
-  "timeToLeave": "2023-11-30T16:30:00Z"
+  "timeToLeave": new Date(now)
 },
 {
   "_id": "650e404b63d222e2c0afc399",
@@ -45,7 +48,7 @@ module.exports = [{
   "isMoving": false,
   "latitude": 51.5,
   "longitude": -0.09,
-  "timeToLeave": "2023-11-30T11:45:00Z"
+  "timeToLeave": now
 },
 {
   "_id": "650e404b63d222e2c0afc39a",
