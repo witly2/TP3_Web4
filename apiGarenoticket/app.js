@@ -32,16 +32,18 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
-
+const cors = require("cors");
 
 
 // Utilisation des routes en tant que middleware
 app.use('/auth', authRoutes);
-app.use(userRoutes);
+//app.use(userRoutes);
 app.use(historiqueRoutes);
 app.use(seed);
 app.use(err.get404);
 app.use(err.getErrors)
+
+app.use(cors(), userRoutes);
 
 
 
