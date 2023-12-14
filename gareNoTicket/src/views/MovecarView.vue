@@ -84,7 +84,7 @@
                 console.log("oui",this.longitude)
 
                 this.map.setView([this.latitude, this.longitude], 16);
-               if(!this.user.voiture.isMoving){
+               if(this.user.voiture.isParked && !this.user.voiture.isMoving){
                   this.markerUser= L.marker([this.latitude, this.longitude], { draggable: false }).addTo(this.map);
                   this.markerUser.bindPopup(`<b>${this.user.username}</b><br>${this.user.voiture.marque} <br>${this.user.voiture.plaque} <br>${this.user.voiture.couleur} `).openPopup();
                }
@@ -247,6 +247,7 @@
         else if(now.getHours()>=16 && now.getHours()<=24){  //on passe au jour suivant
           ttLeave.setDate(now.getDate()+1);
           ttLeave.setHours(heureLimiteMatin.getHours())
+          ttLeave.setMinutes(0, 0)
           console.log("startime4",ttLeave.getHours())
          
         }

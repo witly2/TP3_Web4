@@ -20,7 +20,7 @@ export default {
     data() {
         return {
             user:null,
-            matricule: '',
+            plaque: '',
             marque: '',
             modele: '',
             couleur: '',
@@ -62,7 +62,61 @@ export default {
 
   // Ajouter le formulaire au DOM
   formContainer.appendChild(form.$el);
-}
+        },
+       async creerVoiture(){
+
+            console.log('marque', this.marque)
+            console.log('plaque', this.plaque)
+
+            if (this.marque!=="" && !this.modele!=="" && this.couleur!=="" && this.plaque!=="") {
+                console.log('marque dedans')
+                await fetch(`http://localhost:3000/car/${this.user._id}`,{
+
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem('token'),
+                },
+                body: JSON.stringify( {
+                marque:this.marque,
+                modele:this.modele,
+                couleur:this.couleur,
+                plaque:this.plaque,
+                valet:"650dbef77bc86e471e5c0af6"
+                }),
+                    
+                    
+
+                })
+                .then((response) => {
+                if (response.status === 200) {
+                    let data= response.json();
+                    console.log('data', data)
+                } else {
+                    throw new Error("Erreur !");
+                }
+                })
+                // .then((data) => {
+                // console.log('data', data)
+
+                // })
+                .catch((error) => {
+                console.log("erreur",error);
+                });
+
+            }
+            else{
+                console.log('marque dehors')
+            }
+
+
+      
+        },
+
+        //  nullOrWhiteSpace(str) {
+        //     return str === null || str.trim() === '';
+        // }
+
     },
    async created() {
    
@@ -111,14 +165,11 @@ export default {
             <h5 class="text-center">Profil</h5>
             <div class=" pof shadow card mx-auto flex-wrap">
                 <div class="   col-sm-12 w-lg-75 w-xl-50 p-3">
-                    <p v-if="user.voiture!=null"><strong>Informations personnelles </strong></p>
-                    <form>
-                   
+                    <p v-if="this.user && this.user.voiture!=null"><strong>Informations personnelles </strong></p>
+                    <InputAuth type="mail" name="fCourriel " label="Courriel" v-model="user.email"  v-if="this.user.isValet || this.user.voiture!=null"/>
+                        <InputAuth type="text" name="username" label="pseudo" v-model="user.username" v-if="this.user.isValet || this.user.voiture!=null"/>
 
-                        <InputAuth type="mail" name="fCourriel " label="Courriel" v-model="user.email"  v-if="user.isValet || user.voiture!=null"/>
-                        <InputAuth type="text" name="username" label="pseudo" v-model="user.username" v-if="user.isValet || user.voiture!=null"/>
-
-                         <div v-if="!user.isValet && user.voiture!=null"   >
+                         <div v-if="!this.user.isValet && this.user.voiture!=null"   >
                             <p><strong>Voiture</strong></p>
                             <InputAuth type="text" name="matricule" label="Imatriculation" v-model="user.voiture.plaque" />
                             <InputAuth type="text" name="fMarque " label="Marque" v-model="user.voiture.marque" />
@@ -126,9 +177,9 @@ export default {
                             <InputAuth type="text" name="couleur" label="Couleur" v-model="user.voiture.couleur" />
                         </div>
                         
-                        <div v-if="user.voiture == null && !user.isValet" id="voiture">
+                        <div v-if="this.user.voiture == null && !this.user.isValet" id="voiture">
                             <p><strong>Ajouter une voiture</strong></p>
-                            <InputAuth type="text" name="matricule" label="Immatriculation" v-model="matricule" />
+                            <InputAuth type="text" name="matricule" label="Immatriculation" v-model="plaque" />
                             <InputAuth type="text" name="fMarque" label="Marque" v-model="marque" />
                             <InputAuth type="text" name="modele" label="Modèle" v-model="modele" />
                             <InputAuth type="text" name="couleur" label="Couleur" v-model="couleur" />
@@ -136,15 +187,14 @@ export default {
                             <!-- <button class="btn btn-info mt-2" type="submit" @click="createVoitureForm">Ajouter une voiture</button> -->
                         </div>
 
-                        <div v-if="user.isValet" >
+                        <div v-if="this.user.isValet" >
                             <InputAuth type="number" name="fNumber " label="Tarif" v-model="user.price" />
                         </div>
 
-                        <button class="btn btn-info mt-2" type="submit" v-if="user.voiture!=null || user.isValet">Soumettre</button>
-                        <button class="btn btn-info mt-2" type="submit" v-else>Ajouter</button>
+                        <button class="btn btn-info mt-2" type="submit" v-if="this.user.voiture!=null || user.isValet">Soumettre</button>
+                        <button class="btn btn-info mt-2" type="submit" @click="creerVoiture" v-else>Ajouter</button>
 
 
-                    </form>
                 </div>
 
                

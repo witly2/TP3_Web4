@@ -47,7 +47,7 @@ exports.getUser = async (req, res, next) => {
 exports.getUserById = async (req, res, next) => {
   try {
     const userId = req.params.id;
-    console.log(userId);
+    console.log("user",userId);
     const user = await checkUserExists(userId);
     res.status(200).json({
       user: user
@@ -93,15 +93,27 @@ exports.updateCar = async (req, res, next) => {
     const userId = req.params.userId;
     //console.log(userId);
     const user = await checkUserExists(userId);
-    console.log("voiture",user.voiture.isMoving);
-    const car =user.voiture
+    ///console.log("voiture",user.voiture.isMoving);
+   
     console.log("voitureEntrée",req.body);
+    let car =user.voiture
+    var result=null
     if(!car){
-      const error = new Error('Cette voiture n\'existe pas.');
-      error.statusCode = 404;
-      throw error;
+     car=new Voiture()
+
+     console.log("je suis dedans",req.body.plaque )
+     car.marque=req.body.marque;
+     car.modele=req.body.modele;
+     car.couleur=req.body.couleur;
+     car.plaque=req.body.plaque;
+      result = await car.save()
+    
+     user.voiture=car._id
+     await user.save()
+     
     }
-    console.log("marque",car.isMoving);
+    else{
+      console.log("marque",car.isMoving);
 
     if(req.body.marque !== undefined)
       car.marque=req.body.marque;
@@ -138,8 +150,14 @@ exports.updateCar = async (req, res, next) => {
       car.timeToLeave =req.body.timeToLeave
     }
     
-    const result = await car.save()
-    //console.log("voitureSortir",car);
+     result = await car.save()
+    
+    
+    
+    }
+   
+    
+    console.log("voitureId",car._id);
     console.log("UservoitureSortir",result);
     res.status(200).json(result);
   } catch (err) {
