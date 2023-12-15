@@ -63,7 +63,8 @@ export default {
     
     
     this.findUserLocation();
-    this.etatVoiture()
+    this.etatVoiture();
+    this.actualiserUser();
   },
   methods: {
     initMap() {
@@ -331,6 +332,11 @@ export default {
           document.getElementById('map-confirm').classList.remove('d-none')
         }
         
+      },
+      actualiserUser(){
+        setInterval(() => {
+            this.etatVoiture()
+          }, 1000);
       }
   }
 }

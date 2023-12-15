@@ -283,6 +283,8 @@
           })
           .then((data) => {
             console.log('data', data)
+            this.$router.push({name: 'valet'});
+            window.location.reload();
            
           })
           .catch((error) => {

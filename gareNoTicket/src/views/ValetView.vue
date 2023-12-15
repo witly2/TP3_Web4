@@ -283,7 +283,10 @@
               this.decrementerTempsRestant(index);
             });
           }, 1000);
-      }
+      },
+      
+
+      
   
     },
     

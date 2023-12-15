@@ -46,7 +46,8 @@ created(){
       // Supprimer le token d'authentification du localStorage
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      this.$store.commit('clearUser');
+      //this.$store.commit('clearUser');
+      window.location.reload();
     }
   }
     

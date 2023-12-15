@@ -150,16 +150,8 @@ exports.updateCar = async (req, res, next) => {
     if(req.body.timeToLeave !== undefined){
       car.timeToLeave =req.body.timeToLeave
     }
-
-      if(!car.isMoving){
-        result = await car.save()
-      }
-      else{
-        const error = new Error('La voiture est en déplacement');
-        throw error
-      }
     
-     
+     result = await car.save()
     
       // if(req.body.valet !== undefined){
       //  var resultHisto = await creerHistorique(user.id,user.voiture.valet)
