@@ -58,7 +58,8 @@
                         <td>{{ user.voiture.modele }}</td>
                         <td>{{ user.voiture.plaque }}</td>
                         <td>{{ user.voiture.couleur }}</td>
-                        <td>{{ CalculTempsRestamps(user.voiture.timeToLeave)}}</td>
+                        <!-- <td>{{ CalculTempsRestamps(user.voiture.timeToLeave)}}</td> -->
+                        <td :class="{ 'text-black': tempsRestant[index] <= 10 && tempsRestant[index]>0 ,'clignote': tempsRestant[index] <= 10 && tempsRestant[index]>0,'text-danger': tempsRestant[index] === 0, 'text-success': tempsRestant[index] > 32400  }" class="fw-bold small">{{ this.tempsRestant[index] === 0 ? 'Risque d\'amende' : tempsRestant[index] > 32400 ? 'Demain' : tempsRestant[index] }}</td>
                         <td @click="getPosition(user)"><img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png" alt=""  style="width: 15px;"></td>
                         <td><a :href="'/movecar/'+ user._id"><img src="https://img.freepik.com/vecteurs-premium/icone-voiture-icone-vehicule-icone-vecteur-voiture_564974-1452.jpg" alt="" style="width: 30px;"></a></td>
 
@@ -128,7 +129,9 @@
         latitude: 0,
         longitude: 0,
         showHiddenDiv: false,
-        users:null
+        users:null,
+        tempsRestant: [],
+        intervalId: null
       };
     },
     async mounted() {
@@ -136,7 +139,13 @@
 
       this.initMap();
       this.findUserLocation();
+
+      //Tableau contenant le temps restant
+    
+      this.ChargerTempRestant();
+      //compteur de temps
       
+      this.compteurTemps()
       
     },
     methods: {
@@ -212,7 +221,7 @@
       },
       async getVoitureValet(){
 
-        await fetch(`http://localhost:3000/users/`, {
+        await fetch(`https://garenoticket.vercel.app/users/`, {
             method: "GET",
             headers: {
             "Content-Type": "application/json",
@@ -242,73 +251,39 @@
       CalculTempsRestamps(date ){
 
         var startTime=new Date(date)
-        console.log("startime",startTime.getHours())
+        //console.log("startime",startTime.getHours())
         
        
         var now = new Date();
          let tempsRestant = Math.max(0, Math.floor((startTime - now) / 1000));
 
-        // if (tempsRestant<0) {
-        //     return 0
-        // }
-
-        return tempsRestant
-//         //const startTimeSecone= Math.floor(startTime.getTime() / 1000);
-//         let tempsRestant = 0;
-//         // Calcul de la différence en millisecondes
-//         const differenceInMilliseconds = now-startTime ;
-
-//         // Convertir la différence en jours
-//         const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
-
-
-//        let heureLimiteMatin = new Date();
-//         heureLimiteMatin.setHours(9,0,0)
-//         let heureLimiteMidi=new Date(startTime)
-//         heureLimiteMidi.setHours(13,0,0)
-//         heureLimiteMidi.setMinutes(30, 0);
-
-//         //passer au jour suivant
-//         if(startTime.getHours()>=16 && startTime.getHours()<=24){
-//           heureLimiteMatin.setDate(heureLimiteMatin.getDate() + 1);
-//         }
-
         
-//         if (differenceInDays <=1) {
-//           //temps restant avant 9h du matin
-//           if(startTime.getHours()>=16 || startTime.getHours()<=9){
-//             tempsRestant = heureLimiteMatin-startTime
-//           }
-//           else if(startTime.getHours()>=11 && startTime<=heureLimiteMidi){
-//             //Gratuit de 12h - 13h30
-//             tempsRestant=heureLimiteMidi-startTime
-//             console.error("startTime: ", tempsRestant);
-//             console.error("startTimed: ", startTime.getHours(),heureLimiteMidi);
+        return tempsRestant
 
-//           }
-//           else{
-
-//             //1h
-//             tempsRestant=1 * 60 * 60 * 1000;
-//           }
-
-//         } else {
-//           tempsRestant=0
-          
-          
-//         }
-
-//         console.log("temps restant:", Math.floor(tempsRestant/1000)
-// )
-
-//         return Math.floor(tempsRestant/1000)
 
       },
+      decrementerTempsRestant(index) {
+      //this.$set(this.tempsRestant, index, this.CalculTempsRestamps(this.users[index].voiture.timeToLeave));
+      this.tempsRestant[index]=this.CalculTempsRestamps(this.users[index].voiture.timeToLeave)
+    },
        
-      deplacerVoiture(){
-        
-      }
+      ChargerTempRestant(){
+        this.users.forEach((user, index) => {
+          // this.$set(this.tempsRestant, index, this.CalculTempsRestamps(user.voiture.timeToLeave));
+          this.tempsRestant[index]=this.CalculTempsRestamps(user.voiture.timeToLeave)
+         
+
       
+          });
+      },
+      
+      compteurTemps(){
+        setInterval(() => {
+            this.users.forEach((user, index) => {
+              this.decrementerTempsRestant(index);
+            });
+          }, 1000);
+      }
   
     },
     
@@ -363,6 +338,18 @@
 
 
   }
+
+
+@keyframes clignoteBackground {
+  0% { background-color: red; }
+  50% { background-color: white; }
+  100% { background-color: red; }
+}
+
+.clignote {
+  animation: clignoteBackground 1s infinite;
+  border-radius: 100px;
+}
   
   
   </style>

@@ -118,7 +118,7 @@ export default {
     methods:{
         async getFacture(){
             
-            await fetch("http://localhost:3000/facture/", {
+            await fetch("https://garenoticket.vercel.app/facture/", {
             method: "GET",
             headers: {
             "Content-Type": "application/json",
@@ -138,7 +138,7 @@ export default {
 
         async getHistorique(){
             
-            await fetch("http://localhost:3000/historique/", {
+            await fetch("https://garenoticket.vercel.app/historique/", {
             method: "GET",
             headers: {
             "Content-Type": "application/json",
@@ -172,7 +172,7 @@ export default {
 
         async paid(){
 
-            await fetch("http://localhost:3000/effectuerPaiement/", {
+            await fetch("https://garenoticket.vercel.app/effectuerPaiement/", {
             method: "GET",
             headers: {
             "Content-Type": "application/json",

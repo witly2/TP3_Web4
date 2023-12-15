@@ -4,6 +4,8 @@
 import layoutGen from '../layouts/layoutGenerale.vue';
 //import { jwtDecode } from "jwt-decode";
 import InputAuth from '../components/InputAuth.vue';
+import {toast} from 'vue3-toastify'
+
 //import {mapState} from 'vuex'
 //import store from '../Store';
 
@@ -24,13 +26,14 @@ export default {
             marque: '',
             modele: '',
             couleur: '',
+            error:"",
                 
         };
     },
     methods:{
        async getUser(){
             
-            await fetch("http://localhost:3000/user/", {
+            await fetch("https://garenoticket.vercel.app/user/", {
             method: "GET",
             headers: {
             "Content-Type": "application/json",
@@ -48,15 +51,15 @@ export default {
             });
         },
         createVoitureForm() {
-  const formContainer = document.getElementById('voiture');
+            const formContainer = document.getElementById('voiture');
 
-  const form = this.$createElement('div', [
-    this.$createElement('p', { style: 'font-weight: bold;' }, 'Ajouter une voiture'),
-    this.$createElement('InputAuth', { props: { type: 'text', name: 'matricule', label: 'Immatriculation', value: this.matricule } }),
-    this.$createElement('InputAuth', { props: { type: 'text', name: 'fMarque', label: 'Marque', value: this.marque } }),
-    this.$createElement('InputAuth', { props: { type: 'text', name: 'modele', label: 'Modèle', value: this.modele } }),
-    this.$createElement('InputAuth', { props: { type: 'text', name: 'couleur', label: 'Couleur', value: this.couleur } })
-  ]);
+            const form = this.$createElement('div', [
+                this.$createElement('p', { style: 'font-weight: bold;' }, 'Ajouter une voiture'),
+                this.$createElement('InputAuth', { props: { type: 'text', name: 'matricule', label: 'Immatriculation', value: this.matricule } }),
+                this.$createElement('InputAuth', { props: { type: 'text', name: 'fMarque', label: 'Marque', value: this.marque } }),
+                this.$createElement('InputAuth', { props: { type: 'text', name: 'modele', label: 'Modèle', value: this.modele } }),
+                this.$createElement('InputAuth', { props: { type: 'text', name: 'couleur', label: 'Couleur', value: this.couleur } })
+        ]);
 
   
 
@@ -67,10 +70,30 @@ export default {
 
             console.log('marque', this.marque)
             console.log('plaque', this.plaque)
+            let formMarque, formPlaque, formModel, formCouleur, valet;
 
-            if (this.marque!=="" && !this.modele!=="" && this.couleur!=="" && this.plaque!=="") {
+            
+            if(this.user.voiture===null || this.user.voiture===undefined){
+                formMarque=this.marque;
+                formCouleur=this.couleur;
+                formPlaque=this.plaque;
+                formModel=this.modele;
+                valet="650dbef77bc86e471e5c0af6"
+            }
+            else{
+                formMarque=this.user.voiture.marque;
+                formCouleur=this.user.voiture.couleur;
+                formPlaque=this.user.voiture.plaque;
+                formModel=this.user.voiture.modele;
+                valet=this.user.voiture.valet;
+            }
+
+            console.log('formMarque', formMarque)
+
+            if ( formMarque!=="" && ! formCouleur!=="" && formPlaque!=="" && formModel!=="") {
                 console.log('marque dedans')
-                await fetch(`http://localhost:3000/car/${this.user._id}`,{
+
+                await fetch(`https://garenoticket.vercel.app/car/${this.user._id}`,{
 
                 method: "PUT",
                 headers: {
@@ -78,11 +101,11 @@ export default {
                     "Authorization": "Bearer " + localStorage.getItem('token'),
                 },
                 body: JSON.stringify( {
-                marque:this.marque,
-                modele:this.modele,
-                couleur:this.couleur,
-                plaque:this.plaque,
-                valet:"650dbef77bc86e471e5c0af6"
+                marque:formMarque,
+                modele:formModel,
+                couleur:formCouleur,
+                plaque:formPlaque,
+                valet:valet
                 }),
                     
                     
@@ -92,8 +115,91 @@ export default {
                 if (response.status === 200) {
                     let data= response.json();
                     console.log('data', data)
+                     
+                    if(this.user.voiture===null){
+                    toast.success('Voiture créer avec succès',{
+                        autoClose:3000
+                    });
+                   }
+
+
                 } else {
                     throw new Error("Erreur !");
+                    
+                }
+                })
+                // .then((data) => {
+                // console.log('data', data)
+
+                // })
+                .catch((error) => {
+                console.log("erreur",error);
+
+                toast.error(error,{
+                    autoClose:3000
+                });
+               
+                });
+
+            }
+            else{
+                console.log('marque dehors')
+                 
+               if(this.user.voiture===null){
+                toast.error('Données Manquantes',{
+                    autoClose:3000
+                });
+               }
+
+            }
+
+
+      
+        },
+        async updateUser(){
+            let prices=0;
+            if(this.user.isValet){
+                prices=this.user.price
+            }
+
+            if(this.user.username!==""&&this.user.email!=="" && this.user.voiture.plaque!=="" 
+            && this.user.voiture.modele!=="" && this.user.voiture.couleur!=="" && this.user.voiture.marque!==""){
+
+              if(!this.user.voiture.isMoving){
+
+                this.error=""
+
+                await this.creerVoiture();
+            await fetch(`https://garenoticket.vercel.app/user/${this.user._id}`,{
+
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem('token'),
+                },
+                body: JSON.stringify( {
+                    username:this.user.username,
+                    email:this.user.email,
+                    price:prices
+
+                }),
+                    
+                    
+
+                })
+                .then((response) => {
+                if (response.status === 200) {
+                    let data= response.json();
+                    console.log('data', data)
+                    
+                    toast.success('Modification effectuée',{
+                        autoClose:3000
+                    });
+
+
+                } else {
+                    throw new Error("Erreur !");
+                    
                 }
                 })
                 // .then((data) => {
@@ -104,49 +210,112 @@ export default {
                 console.log("erreur",error);
                 });
 
+              }else{
+                // toast.error('votre voiture est en co',{
+                //     autoClose:3000
+                // });
+                document.getElementById("erreur").classList.remove("d-none")
+                this.error="Mise à jour impossible, car un valet déplace votre voiture"
+              }
             }
             else{
-                console.log('marque dehors')
+                toast.error('Données Manquantes',{
+                    autoClose:3000
+                });
             }
+           
+                        },
+        deleteVoiture(){
+       
+            document.getElementById("btnAL").classList.add("disabled");
+            document.getElementById("deletevoiture").classList.add("disabled");
+            document.getElementById("deleteConfirmation").classList.remove("d-none");
 
-
-      
         },
+        AnnulerDelete(){
+            document.getElementById("btnAL").classList.remove("disabled");
+            document.getElementById("deletevoiture").classList.remove("disabled");
+            document.getElementById("deleteConfirmation").classList.add("d-none");
+        },
+        async confirmDelete(){
 
-        //  nullOrWhiteSpace(str) {
-        //     return str === null || str.trim() === '';
-        // }
+            console.log("userVoiuy", this.user)
+           if(!this.user.voiture.isMoving){
+            await fetch(`https://garenoticket.vercel.app/user/`,{
 
-    },
-   async created() {
-   
-           await this.getUser();
-            console.log("user", this.user.username);
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem('token'),
+                },
+                })
+                .then((response) => {
+                if (response.status === 204) {
+                    let data= response.json();
+                    console.log('data', data)
+                    
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                   
+                    toast.success('Votre compte è été supprimé avec succès',{
+                        autoClose:3000
+                    });
+
+                    this.$router.push({name: 'login'});
+
+                } else {
+                    throw new Error("Erreur !");
+                    
+                }
+                })
+
+                .catch((error) => {
+                console.log("erreur",error);
+
+
+
+                });
+           }
+           else{
+            this.error="Opération impossible, car un valet déplace votre voiture"
+            toast.error('Votre voiture est en cour de déplacement',{
+                        autoClose:3000
+                    });
+           }
+
+        }
         
-    },
-    // Mon userSession
-    computed: {
-        // user() {
-        //     // console.log("user: ",localStorage.getItem("user"))
-        //     // //store.getters('user')
-        //     // return this.$store.state.user || {};
-
-        //     const token = localStorage.getItem("token");
-
-        //     if (token) {
-        //        const storedUser=jwtDecode(token);
-        //     //    this.infos = [
-        //     //         { id: 'Pseudo', valeur: storedUser?.username },
-        //     //         { id: 'Email', valeur: storedUser?.email },
-        //     //     ];
-        //         return storedUser
-        //     } else {
-        //         return null; // ou une valeur par défaut appropriée
-        //     }
-        // },
-        
 
     },
+    async created() {
+    
+            await this.getUser();
+                console.log("user", this.user.username);
+            
+        },
+        // Mon userSession
+        computed: {
+            // user() {
+            //     // console.log("user: ",localStorage.getItem("user"))
+            //     // //store.getters('user')
+            //     // return this.$store.state.user || {};
+
+            //     const token = localStorage.getItem("token");
+
+            //     if (token) {
+            //        const storedUser=jwtDecode(token);
+            //     //    this.infos = [
+            //     //         { id: 'Pseudo', valeur: storedUser?.username },
+            //     //         { id: 'Email', valeur: storedUser?.email },
+            //     //     ];
+            //         return storedUser
+            //     } else {
+            //         return null; // ou une valeur par défaut appropriée
+            //     }
+            // },
+            
+
+        },
     
   
 
@@ -161,7 +330,9 @@ export default {
 <template >
 <layoutGen>
     <div class="profile my-auto">
+        
         <div class="  mx-auto info my-5  p-5 ">
+            <div class="bg-danger w-100 text-center mt-4 py-2 fw-bold text-white small d-none" id="erreur">{{ this.error }}</div>
             <h5 class="text-center">Profil</h5>
             <div class=" pof shadow card mx-auto flex-wrap">
                 <div class="   col-sm-12 w-lg-75 w-xl-50 p-3">
@@ -191,16 +362,27 @@ export default {
                             <InputAuth type="number" name="fNumber " label="Tarif" v-model="user.price" />
                         </div>
 
-                        <button class="btn btn-info mt-2" type="submit" v-if="this.user.voiture!=null || user.isValet">Soumettre</button>
-                        <button class="btn btn-info mt-2" type="submit" @click="creerVoiture" v-else>Ajouter</button>
+                        
+                        <div d-flex justify-content-between>
+                            <button class="btn btn-info mt-2" id="btnAL" @click="updateUser" v-if="this.user.voiture!=null || user.isValet">Soumettre</button>
+                            <button class="btn btn-info mt-2" id="btnAl"  @click="creerVoiture" v-else>Ajouter</button>
+                            <button class="btn btn-danger mt-2 ms-3" id="deletevoiture" @click="deleteVoiture" >Supprimer</button>
+                        </div>
 
+                        <div class="shadow my-3  text-center d-none  py-2" id="deleteConfirmation">
+                            <p class="small fw-bold"> Ce compte doit être définitivement supprimer.  </p>
+                            <div class="d-flex mx-auto">
+                                <a class="ms-2 text-black small btn fw-bold shadow " @click="confirmDelete" >Confirmé</a>
+                                <a class="ms-2 text-black small btn btn-secondary fw-bold shadow " @click="AnnulerDelete" >annulé</a>
+                            </div>
+                        </div>
 
                 </div>
 
-               
+              
            
             </div>
-            
+          
         </div>
 
     </div>

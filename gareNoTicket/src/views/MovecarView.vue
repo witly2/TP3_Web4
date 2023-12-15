@@ -112,7 +112,7 @@
         console.log("Id:",this.$route.params.id)
 
         
-        await fetch(`http://localhost:3000/user/${this.$route.params.id}`, {
+        await fetch(`https://garenoticket.vercel.app/user/${this.$route.params.id}`, {
             method: "GET",
             headers: {
             "Content-Type": "application/json",
@@ -228,20 +228,22 @@
         let ttLeave = new Date()
         console.log("startime0",ttLeave.getHours())
        
-        if(now.getHours()>=heureLimiteMatin.getHours() &&now.getHours()<=11 ){
+        if(now.getHours()>=heureLimiteMatin.getHours() &&now.getHours()<11 ){
           ttLeave.setHours(now.getHours()+1)
           console.log("startime1",ttLeave.getHours())
         }
-        else if(now.getHours()>=11 &&now.getHours()<=12){
+        else if(now.getHours()>=11 &&now.getHours()<12){
           ttLeave=heureLimiteMidi
           console.log("startime",ttLeave.getHours())
         }
-        else if(now.getHours()>12 &&now.getHours()<=heureLimiteMidi.getHours()){
+        else if(now.getHours()>=12 &&now<heureLimiteMidi){
           ttLeave.setHours(heureLimiteMidi.getHours()+1)
+          ttLeave.setMinutes(heureLimiteMidi.getMinutes(),0)
           console.log("startime2",ttLeave.getHours())
         }
-        else if(now.getHours()>heureLimiteMidi.getHours() &&now.getHours()<16){
+        else if(now>=heureLimiteMidi &&now.getHours()<16){
           ttLeave.setHours(now.getHours()+1)
+     
           console.log("startime3",ttLeave.getHours())
         }
         else if(now.getHours()>=16 && now.getHours()<=24){  //on passe au jour suivant
@@ -256,11 +258,11 @@
           console.log("startime5",ttLeave.getHours())
         }
 
-        requestBody = { isParked:true,isMoving:false,latitude:lat,longitude:lng, timeToLeave:ttLeave };
+        requestBody = { isParked:true,isMoving:false,latitude:lat,longitude:lng, timeToLeave:ttLeave, valet:"valet" };
       }
 
-      console.log("reques",requestBody)
-      await fetch(`http://localhost:3000/car/${this.$route.params.id}`,{
+
+      await fetch(`https://garenoticket.vercel.app/car/${this.$route.params.id}`,{
 
           method: "PUT",
             headers: {

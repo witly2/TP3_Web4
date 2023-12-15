@@ -29,7 +29,7 @@ export default{
         console.log("courrielle "+ this.courriel)
         console.log("password " +this.password)
         
-              fetch("http://localhost:3000/auth/signup",{
+              fetch("https://garenoticket.vercel.app/auth/signup",{
 
         method: "POST",
           headers: {

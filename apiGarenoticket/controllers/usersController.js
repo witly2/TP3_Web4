@@ -47,7 +47,7 @@ exports.getUser = async (req, res, next) => {
 exports.getUserById = async (req, res, next) => {
   try {
     const userId = req.params.id;
-    console.log("user",userId);
+   
     const user = await checkUserExists(userId);
     res.status(200).json({
       user: user
@@ -63,16 +63,22 @@ exports.updateUser = async (req, res, next) => {
 
   try {
     const userId = req.params.userId;
-    console.log(userId);
+   
     const user = await checkUserExists(userId);
+
+
+    if(user.isValet){
+      user.price=req.body.price
+
+     }
 
     user.email=req.body.email;
 
-    const hashedPassword = await bcrypt.hash(req.body.password,10);
+    // const hashedPassword = await bcrypt.hash(req.body.password,10);
 
-    if(user.password!=hashedPassword){
-      user.password=hashedPassword;
-    }
+    // if(user.password!=hashedPassword){
+    //   user.password=hashedPassword;
+    // }
 
 
     
@@ -82,7 +88,9 @@ exports.updateUser = async (req, res, next) => {
     const result = await user.save()
     res.status(200).json(result);
   } catch (err) {
+    console.log("erreur",err)
     next(err);
+    
   }
 
 }
@@ -95,7 +103,7 @@ exports.updateCar = async (req, res, next) => {
     const user = await checkUserExists(userId);
     ///console.log("voiture",user.voiture.isMoving);
    
-    console.log("voitureEntrée",req.body);
+    
     let car =user.voiture
     var result=null
     if(!car){
@@ -113,7 +121,7 @@ exports.updateCar = async (req, res, next) => {
      
     }
     else{
-      console.log("marque",car.isMoving);
+      
 
     if(req.body.marque !== undefined)
       car.marque=req.body.marque;
@@ -124,18 +132,11 @@ exports.updateCar = async (req, res, next) => {
     if(req.body.plaque !== undefined)
       car.plaque=req.body.plaque;
     let isMoving=req.body.isMoving
-
-
-    console.log("ismoving",isMoving);
     if(isMoving!==undefined ){
-      console.log("movingf", isMoving)
+     
       car.isMoving=isMoving
       
-    }
-    else{
-      console.log("movingf ne marche pas")
-    }
-      
+    } 
     let isParked =req.body.isParked
     if(isParked !== undefined)
       car.isParked=isParked
@@ -152,14 +153,16 @@ exports.updateCar = async (req, res, next) => {
     
      result = await car.save()
     
-    
-    
+      // if(req.body.valet !== undefined){
+      //  var resultHisto = await creerHistorique(user.id,user.voiture.valet)
+      // }
+
+      var resultHisto = await creerHistorique(user.id,user.voiture.valet)
     }
    
     
-    console.log("voitureId",car._id);
-    console.log("UservoitureSortir",result);
-    res.status(200).json(result);
+   
+    res.status(200).json(resultHisto);
   } catch (err) {
     next(err);
   }
@@ -170,6 +173,7 @@ exports.updateCar = async (req, res, next) => {
 exports.deleteUser = async (req, res, next) => {
   try {
     const userId = req.user.userId;
+
     const user = await checkUserExists(userId);
     await user.remove();
     if (user.voiture) {
@@ -191,4 +195,28 @@ async function checkUserExists(userId) {
     throw error;
   }
   return user;
+}
+
+async function creerHistorique(idUser, idValet){
+
+    try {
+      
+      const user = await checkUserExists(idUser);
+      const valet = await checkUserExists(idValet);
+
+      let histo = new Histo()
+
+      histo.price=valet.price;
+      histo.isPaid=false;
+      histo.userId=user.id;
+      histo.valetId=valet.id;
+      
+      const result = await histo.save();
+     console.log("historique",  res.status(200).json(result))
+      return result
+
+    } catch (error) {
+      next(err);
+    }
+
 }

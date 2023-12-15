@@ -83,7 +83,7 @@ export default {
       console.log("Id:",this.userLocastorage.userId)
       const userid=this.userLocastorage.userId
 
-      await fetch(`http://localhost:3000/user/${userid}`, {
+      await fetch(`https://garenoticket.vercel.app/user/${userid}`, {
           method: "GET",
           headers: {
           "Content-Type": "application/json",
@@ -251,7 +251,7 @@ export default {
         }
 
         console.log("reques",requestBody)
-        await fetch(`http://localhost:3000/car/${this.user._id}`,{
+        await fetch(`https://garenoticket.vercel.app/car/${this.user._id}`,{
 
             method: "PUT",
               headers: {
@@ -290,7 +290,7 @@ export default {
 
         //requête dans l'api
 
-        await fetch(`http://localhost:3000/car/${this.user._id}`,{
+        await fetch(`https://garenoticket.vercel.app/car/${this.user._id}`,{
 
           method: "PUT",
             headers: {

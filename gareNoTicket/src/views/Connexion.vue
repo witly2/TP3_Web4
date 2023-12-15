@@ -35,7 +35,7 @@ export default{
       console.log("courrielle "+ this.courriel)
       console.log("password " +this.password)
 
-      fetch("https://garenoticket-lvmpu0p5o-wilys-projects.vercel.app/auth/login",{
+      fetch("https://garenoticket.vercel.app/auth/login",{
 
         method: "POST",
           headers: {
