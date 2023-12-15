@@ -121,6 +121,8 @@ export default {
                         autoClose:3000
                     });
                    }
+                   window.location.reload();
+
 
 
                 } else {
@@ -128,16 +130,14 @@ export default {
                     
                 }
                 })
-                // .then((data) => {
-                // console.log('data', data)
+                .then((data) => {
+                console.log('data', data)
 
-                // })
+                })
                 .catch((error) => {
                 console.log("erreur",error);
 
-                toast.error(error,{
-                    autoClose:3000
-                });
+              
                
                 });
 
@@ -195,6 +195,8 @@ export default {
                     toast.success('Modification effectuée',{
                         autoClose:3000
                     });
+
+                    window.location.reload();
 
 
                 } else {
@@ -260,8 +262,9 @@ export default {
                     toast.success('Votre compte è été supprimé avec succès',{
                         autoClose:3000
                     });
+                    window.location.reload();
 
-                    this.$router.push({name: 'login'});
+                    //this.$router.push({name: 'login'});
 
                 } else {
                     throw new Error("Erreur !");

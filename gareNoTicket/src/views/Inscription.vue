@@ -2,6 +2,7 @@
 <script >
 import layoutAuthentification from '../layouts/layoutAuthentification.vue';
 import InputAuth from '../components/InputAuth.vue';
+import {toast} from 'vue3-toastify'
 export default{
   components:{
     layoutAuthentification,
@@ -29,36 +30,64 @@ export default{
         console.log("courrielle "+ this.courriel)
         console.log("password " +this.password)
         
-              fetch("https://garenoticket.vercel.app/auth/signup",{
+        if(this.courriel==="" || this.password===""||this.nom===""||this.cPassword===""){
+          toast.error('Veullez remplir tous les champs',{
+                        autoClose:3000
+                    });
 
-        method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: this.courriel,
-            password: this.password,
-            username:this.nom,
-            confirmPassword:this.cPassword
-          }),
-      })
-        .then((response) => {
-          if (response.status === 201) {
-            return response.json();
-          } else {
-            throw new Error("Erreur !");
-          }
-        })
-        .then((data) => {
-          console.log('data', data)
-          localStorage.setItem("token", data.token);
-          console.log("token "+ data.token)
-          localStorage.setItem("user", JSON.stringify(data.user));
-          this.$router.push({name: 'login'});
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+          this.password=""
+          this.cPassword=""
+        }
+        else if(this.password!==this.cPassword){
+          toast.error('Les mots de passe ne doivent être différents',{
+                        autoClose:3000
+                    });
+          this.password=""
+          this.cPassword=""
+        }
+        else if(this.password.length<6){
+          toast.error('Les mots de passe doit avoir plus de 6 caractères',{
+                        autoClose:3000
+                    });
+          this.password=""
+          this.cPassword=""
+        }
+        else{
+          fetch("https://garenoticket.vercel.app/auth/signup",{
+
+            method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: this.courriel,
+                password: this.password,
+                username:this.nom,
+                confirmPassword:this.cPassword
+              }),
+            })
+            .then((response) => {
+              if (response.status === 201) {
+                return response.json();
+              } else {
+                throw new Error("Erreur !");
+              }
+            })
+            .then((data) => {
+              console.log('data', data)
+              localStorage.setItem("token", data.token);
+              console.log("token "+ data.token)
+              localStorage.setItem("user", JSON.stringify(data.user));
+
+              toast.success('Compte créer avec succès',{
+                        autoClose:3000
+                    });
+              this.$router.push({name: 'login'});
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       },
     
     
