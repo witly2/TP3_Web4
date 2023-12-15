@@ -175,7 +175,8 @@ exports.deleteUser = async (req, res, next) => {
     const userId = req.user.userId;
 
     const user = await checkUserExists(userId);
-    await user.remove();
+    //await user.remove();
+    await User.findByIdAndRemove(userId)
     if (user.voiture) {
       const voiture = await Voiture.findById(user.voiture);
       await voiture.remove();
