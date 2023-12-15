@@ -35,63 +35,73 @@ export default{
       console.log("courrielle "+ this.courriel)
       console.log("password " +this.password)
 
-      fetch("https://garenoticket.vercel.app/auth/login",{
-
-        method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: this.courriel,
-            password: this.password,
-          }),
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            throw new Error("Erreur !");
-          }
-        })
-        .then((data) => {
-          //console.log('data', data)
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          //console.log("token "+ data.token)
-          // localStorage.setItem("user", JSON.stringify(data.user));
-
-          // Décodage du JWT
-          const decoded = jwtDecode(data.token);
-        
-
-          console.log("userId", decoded.username)
-          
-          // this.$toasted.show('Connexion réussie', {
-          //   theme: 'toasted-primary', // vous pouvez personnaliser le thème
-          //   position: 'top-center',   // position du toast
-          //   duration: 3000             // durée d'affichage en millisecondes
-          // })
-
-          toast.success('Message de réussite!',{
+      if(this.courriel==="" || this.password===""){
+        toast.error('information insuffisante',{
             autoClose:3000
           });
-          const userStore = useUserStore();
-          userStore.setUser(decoded)
-          console.log("userStore",userStore.getUser().username)
+      }
+      else{
+        fetch("https://garenoticket.vercel.app/auth/login",{
 
-          // if(decoded.isValet===true){
-          //   this.$router.push({name: 'valet'});
-          // }
-          // else{
-            this.$router.push({name: 'home'});
-          //}
+method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email: this.courriel,
+    password: this.password,
+  }),
+})
+.then((response) => {
+  if (response.status === 200) {
+    return response.json();
+  } else {
+    throw new Error("Erreur !");
+  }
+})
+.then((data) => {
+  //console.log('data', data)
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("user", JSON.stringify(data.user));
+  //console.log("token "+ data.token)
+  // localStorage.setItem("user", JSON.stringify(data.user));
 
-          
-         
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+  // Décodage du JWT
+  const decoded = jwtDecode(data.token);
+
+
+  console.log("userId", decoded.username)
+  
+  // this.$toasted.show('Connexion réussie', {
+  //   theme: 'toasted-primary', // vous pouvez personnaliser le thème
+  //   position: 'top-center',   // position du toast
+  //   duration: 3000             // durée d'affichage en millisecondes
+  // })
+
+  toast.success('Message de réussite!',{
+    autoClose:3000
+  });
+  const userStore = useUserStore();
+  userStore.setUser(decoded)
+  console.log("userStore",userStore.getUser().username)
+
+  // if(decoded.isValet===true){
+  //   this.$router.push({name: 'valet'});
+  // }
+  // else{
+    this.$router.push({name: 'home'});
+  //}
+
+  
+ 
+})
+.catch((error) => {
+  console.log(error);
+  toast.error(`une erreur s'est produite`,{
+    autoClose:3000
+  });
+});
+      }
       },
     
   }, 
