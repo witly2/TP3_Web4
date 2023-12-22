@@ -13,6 +13,9 @@ import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import GAuth from 'vue3-google-oauth2'
+
+//import GAuth from 'vue3-google-oauth2'
 
 const vuetify = createVuetify({
   components,
@@ -27,5 +30,11 @@ const app = createApp(App)
 app.use(router)
 app.use(vuetify)
 app.use(createPinia())
-//app.use(toast);
+const gAuthOptions ={
+  clientId: '327356641464-qkovpe2ilssnuj58okj26m2bhhboraa8.apps.googleusercontent.com', 
+  scope: 'email', 
+  prompt: 'consent', 
+  fetch_basic_profile: false 
+}
+app.use(GAuth, gAuthOptions)
 app.mount('#app')

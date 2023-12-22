@@ -3,11 +3,18 @@
 import layoutAuthentification from '../layouts/layoutAuthentification.vue';
 import InputAuth from '../components/InputAuth.vue';
 import {toast} from 'vue3-toastify'
+
+// import { inject } from 'vue';
+// import {vue3GoogleOauth2} from 'vue3-google-oauth2';
 export default{
   components:{
     layoutAuthentification,
     InputAuth
   },
+  // setup(){
+  //   const vue3GoogleOauth = inject(vue3GoogleOauth2);
+  //   return vue3GoogleOauth
+  // },
   data(){
     return {
       courriel:"",
@@ -25,7 +32,21 @@ export default{
     // handleInputChangeM(value) {
     //   this.password = value;
     // },
-   
+    async handleSignin(){
+      try {
+        const googleUser = await this.$gAuth.signIn();
+        
+        if (!googleUser) {
+          console.log("nullUser", googleUser);
+          return null;
+        } else {
+          console.log("googleUser", googleUser);
+        }
+    } catch (error) {
+      console.error("Une erreur s'est produite lors de la connexion Google :", error);
+      // Vous pouvez traiter l'erreur de manière appropriée ici
+    }
+    },
       signup(){
         console.log("courrielle "+ this.courriel)
         console.log("password " +this.password)
@@ -108,6 +129,41 @@ export default{
               <div class="col-10 col-sm-8 col-md-6 col-lg-6 offset-1 offset-sm-2 offset-md-3 offset-lg-0 align-self-center d-lg-flex align-items-lg-center align-self-lg-stretch bg-white p-5 rounded rounded-lg-0 my-5 my-lg-0" id="login-block">
                   <div class="m-auto w-lg-75 w-xl-50">
                       <h2 class="text-info fw-light mb-5"><i class="fa fa-diamond"></i>&nbsp;GareNoTicket</h2>
+
+                      <div class="login-card-social mx-auto py-4 align-content-center">
+             
+
+             <div class="log-card-social-btn d-flex">
+                 <div>
+                     <a href="#">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                             <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+                         </svg>
+
+                     </a>
+                     <div style="font-size:calc(1rem*.8); opacity:.8;">Github </div>
+                 </div>
+
+                 <div @click="handleSignin">
+                     <a href="#">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-google" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                             <path d="M17.788 5.108a9 9 0 1 0 3.212 6.892h-8"></path>
+                         </svg>
+
+                     </a>
+                     <div style="font-size:calc(1rem*.8); opacity:.8;">Google</div>
+                 </div>
+             </div>
+
+         </div>
+
+         <div class="my-3 align-items-center d-flex ou">
+             <span class="w-50 border border-1 "></span>
+             <span style="font-size:calc(1rem*.8); opacity:.8;">Ou</span>
+             <span class="w-50 border border-1 "></span>
+         </div>
                       <form v-on:submit.prevent="signup">
                         <InputAuth type="mail" name="fCourriel" label="Courriel" v-model="courriel"/>
                         <InputAuth type="text" label="Nom" name="fNom" v-model="nom"/>
